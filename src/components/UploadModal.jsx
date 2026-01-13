@@ -1,10 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { storage, db, appId, isDemoMode } from '../config/firebase';
+import { db, appId, isDemoMode } from '../config/firebase';
 import { MEMBERS, IURAN_PER_BULAN } from '../data/members';
 import imageCompression from 'browser-image-compression';
 import { X, Upload, Image, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
+
+// Upload API URL - configured via environment variable
+const UPLOAD_API_URL = import.meta.env.VITE_UPLOAD_API_URL || '';
 
 export default function UploadModal({ isOpen, onClose, currentMonth }) {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -59,6 +61,12 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
       return;
     }
 
+    // Check if upload API URL is configured
+    if (!UPLOAD_API_URL && !isDemoMode) {
+      setError('Upload API belum dikonfigurasi. Hubungi admin.');
+      return;
+    }
+
     setUploading(true);
     setUploadProgress(10);
 
@@ -75,20 +83,30 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
         return;
       }
 
-      // Create unique filename
-      const timestamp = Date.now();
-      const fileName = `proof_${selectedName.replace(/\s+/g, '_')}_${currentMonth.replace(/\s+/g, '_')}_${timestamp}.jpg`;
-      
       setUploadProgress(30);
 
-      // Upload to Firebase Storage
-      const storageRef = ref(storage, `proofs/${fileName}`);
-      await uploadBytes(storageRef, selectedFile);
-      
+      // Upload to custom server using FormData
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+
+      const response = await fetch(UPLOAD_API_URL, {
+        method: 'POST',
+        body: formData
+      });
+
       setUploadProgress(60);
 
-      // Get download URL
-      const downloadURL = await getDownloadURL(storageRef);
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const result = await response.json();
+      
+      if (!result.success || !result.url) {
+        throw new Error(result.error || 'Upload failed');
+      }
+
+      const imageUrl = result.url;
       
       setUploadProgress(80);
 
@@ -98,7 +116,7 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
         name: selectedName,
         month: currentMonth,
         amount: IURAN_PER_BULAN,
-        proofUrl: downloadURL,
+        proofUrl: imageUrl,
         uploadedAt: serverTimestamp(),
         status: 'pending'
       });
