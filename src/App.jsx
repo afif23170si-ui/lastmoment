@@ -403,14 +403,22 @@ export default function App() {
                     <h3 className="font-bold text-slate-800 text-lg">Monthly Updates</h3>
                     <p className="text-xs text-slate-400 font-medium">Periode {bulanSekarang}</p>
                   </div>
-                  <div className="bg-white px-3 py-1.5 rounded-xl shadow-sm border border-slate-100 flex items-center gap-2">
-                    <div className="flex -space-x-2">
-                      <div className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></div>
-                      <div className="w-2 h-2 rounded-full bg-slate-300 ring-2 ring-white"></div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white px-3 py-1.5 rounded-xl shadow-sm border border-slate-100 flex items-center gap-2">
+                      <div className="flex -space-x-2">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></div>
+                        <div className="w-2 h-2 rounded-full bg-slate-300 ring-2 ring-white"></div>
+                      </div>
+                      <span className="text-[10px] font-bold text-slate-500">
+                        {listSudahBayarBulanIni.length}/{MEMBERS.length} Paid
+                      </span>
                     </div>
-                    <span className="text-[10px] font-bold text-slate-500">
-                      {listSudahBayarBulanIni.length}/{MEMBERS.length} Paid
-                    </span>
+                    <button 
+                      onClick={() => setActiveTab('history')}
+                      className="text-[10px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                    >
+                      Lihat Semua <ChevronRight size={12} />
+                    </button>
                   </div>
                 </div>
 
