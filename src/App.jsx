@@ -423,14 +423,21 @@ export default function App() {
                   {MEMBERS.map((member) => {
                     const nama = member.name;
                     const sudahBayar = listSudahBayarBulanIni.includes(nama);
+                    const isPending = pendingPayments.some(p => p.name === nama && p.month === bulanSekarang);
+                    
+                    // Determine status: paid > pending > unpaid
+                    const status = sudahBayar ? 'paid' : isPending ? 'pending' : 'unpaid';
+                    
                     return (
                       <motion.div 
                         key={nama}
                         variants={item}
                         onClick={() => isAdmin && toggleStatusBayar(nama)}
                         className={`group relative overflow-hidden p-4 rounded-xl transition-all duration-300 ${
-                          sudahBayar 
+                          status === 'paid'
                           ? 'bg-white shadow-sm border-l-4 border-l-emerald-500 border-y border-r border-slate-100' 
+                          : status === 'pending'
+                          ? 'bg-amber-50 shadow-sm border-l-4 border-l-amber-500 border-y border-r border-amber-100'
                           : 'bg-slate-100 border border-slate-200 opacity-70 grayscale-[0.8] hover:grayscale-0 hover:opacity-100 hover:bg-white hover:shadow-md'
                         } ${isAdmin ? 'cursor-pointer active:scale-[0.99]' : ''}`}
                       >
@@ -438,8 +445,10 @@ export default function App() {
                           <div className="flex items-center gap-4">
                             {/* Avatar */}
                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm transition-colors ${
-                              sudahBayar 
+                              status === 'paid'
                                 ? 'bg-emerald-50 text-emerald-600' 
+                                : status === 'pending'
+                                ? 'bg-amber-100 text-amber-600'
                                 : 'bg-slate-200 text-slate-400'
                             }`}>
                               {nama.charAt(0)}
@@ -447,19 +456,23 @@ export default function App() {
                             
                             {/* Info */}
                             <div>
-                              <p className={`text-sm font-bold ${sudahBayar ? 'text-slate-800' : 'text-slate-500'}`}>{nama}</p>
+                              <p className={`text-sm font-bold ${status === 'paid' ? 'text-slate-800' : status === 'pending' ? 'text-amber-800' : 'text-slate-500'}`}>{nama}</p>
                               <p className="text-[10px] font-medium text-slate-400">{member.role || 'Member'}</p>
                             </div>
                           </div>
 
                           {/* Status Badge */}
                           <div className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 ${
-                            sudahBayar 
+                            status === 'paid'
                               ? 'bg-emerald-50 text-emerald-600' 
+                              : status === 'pending'
+                              ? 'bg-amber-100 text-amber-600'
                               : 'bg-slate-200 text-slate-400'
                           }`}>
-                             {sudahBayar ? (
+                             {status === 'paid' ? (
                                <>Lunas <CheckCircle2 size={10} /></>
+                             ) : status === 'pending' ? (
+                               <>Pending <Clock size={10} /></>
                              ) : (
                                <>Belum <Circle size={10} /></>
                              )}
