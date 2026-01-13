@@ -423,10 +423,25 @@ export default function App() {
                   {MEMBERS.map((member) => {
                     const nama = member.name;
                     const sudahBayar = listSudahBayarBulanIni.includes(nama);
-                    const isPending = pendingPayments.some(p => p.name === nama && p.month === bulanSekarang);
+                    const pendingData = pendingPayments.find(p => p.name === nama && p.month === bulanSekarang);
+                    const isPending = !!pendingData;
+                    const paymentData = payments.find(p => p.name === nama && p.month === bulanSekarang);
                     
                     // Determine status: paid > pending > unpaid
                     const status = sudahBayar ? 'paid' : isPending ? 'pending' : 'unpaid';
+                    
+                    // Get date info
+                    const getDateInfo = () => {
+                      if (status === 'paid' && paymentData?.date) {
+                        const d = new Date(paymentData.date);
+                        return d.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+                      }
+                      if (status === 'pending' && pendingData?.uploadedAt) {
+                        const d = pendingData.uploadedAt.toDate ? pendingData.uploadedAt.toDate() : new Date(pendingData.uploadedAt);
+                        return d.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+                      }
+                      return member.role || 'Member';
+                    };
                     
                     return (
                       <motion.div 
@@ -457,7 +472,7 @@ export default function App() {
                             {/* Info */}
                             <div>
                               <p className={`text-sm font-bold ${status === 'paid' ? 'text-slate-800' : status === 'pending' ? 'text-amber-800' : 'text-slate-500'}`}>{nama}</p>
-                              <p className="text-[10px] font-medium text-slate-400">{member.role || 'Member'}</p>
+                              <p className="text-[10px] font-medium text-slate-400">{getDateInfo()}</p>
                             </div>
                           </div>
 
@@ -628,7 +643,7 @@ export default function App() {
                                <div>
                                   <p className="text-sm font-bold text-slate-700">{p.name}</p>
                                   <p className="text-[10px] text-slate-400 font-medium">
-                                    {new Date(p.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long' })}
+                                    {new Date(p.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} • {new Date(p.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                                   </p>
                                </div>
                             </div>
