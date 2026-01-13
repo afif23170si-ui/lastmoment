@@ -398,28 +398,22 @@ export default function App() {
 
               {/* Members List (Redesign) */}
               <section className="bg-slate-50/50 backdrop-blur-sm border border-white/60 p-6 rounded-2xl">
-                <div className="flex justify-between items-center mb-6">
+                <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="font-bold text-slate-800 text-lg">Monthly Updates</h3>
-                    <p className="text-xs text-slate-400 font-medium">Periode {bulanSekarang}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="bg-white px-3 py-1.5 rounded-xl shadow-sm border border-slate-100 flex items-center gap-2">
-                      <div className="flex -space-x-2">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></div>
-                        <div className="w-2 h-2 rounded-full bg-slate-300 ring-2 ring-white"></div>
-                      </div>
-                      <span className="text-[10px] font-bold text-slate-500">
-                        {listSudahBayarBulanIni.length}/{MEMBERS.length} Paid
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-bold text-slate-800 text-lg">Monthly Updates</h3>
+                      <span className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                        {listSudahBayarBulanIni.length}/{MEMBERS.length}
                       </span>
                     </div>
-                    <button 
-                      onClick={() => setActiveTab('history')}
-                      className="text-[10px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
-                    >
-                      Lihat Semua <ChevronRight size={12} />
-                    </button>
+                    <p className="text-xs text-slate-400 font-medium">Periode {bulanSekarang}</p>
                   </div>
+                  <button 
+                    onClick={() => setActiveTab('history')}
+                    className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-0.5 mt-1"
+                  >
+                    Lihat Semua <ChevronRight size={14} />
+                  </button>
                 </div>
 
                 <motion.div 
