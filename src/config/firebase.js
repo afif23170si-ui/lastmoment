@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { getStorage } from 'firebase/storage';
 
 // Check if Firebase config is available
 const hasFirebaseConfig = import.meta.env.VITE_FIREBASE_API_KEY && 
@@ -20,12 +21,14 @@ const firebaseConfig = hasFirebaseConfig ? {
 let app = null;
 let db = null;
 let auth = null;
+let storage = null;
 
 if (firebaseConfig) {
   try {
     app = initializeApp(firebaseConfig);
     db = getFirestore(app);
     auth = getAuth(app);
+    storage = getStorage(app);
   } catch (error) {
     console.warn('Firebase initialization failed:', error);
   }
@@ -37,4 +40,4 @@ const appId = import.meta.env.VITE_APP_ID || 'last-moment-2027';
 // Flag to indicate if we're in demo mode (no Firebase)
 const isDemoMode = !firebaseConfig || !app;
 
-export { app, db, auth, appId, isDemoMode };
+export { app, db, auth, storage, appId, isDemoMode };

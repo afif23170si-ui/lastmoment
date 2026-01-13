@@ -38,6 +38,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { db, auth, appId, isDemoMode } from './config/firebase';
 import { MEMBERS, TARGET_SALDO, IURAN_PER_BULAN, TANGGAL_LULUS } from './data/members';
 
+// Import components
+import UploadModal from './components/UploadModal';
+import AdminPanel from './components/AdminPanel';
+
 // Import assets
 import albumImage from './assets/album-1.jpg';
 
@@ -50,6 +54,11 @@ export default function App() {
   const [showPinModal, setShowPinModal] = useState(false);
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
+  
+  // V2: Upload & Pending States
+  const [pendingPayments, setPendingPayments] = useState([]);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
 
   // Admin PIN from environment variable
   const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '2027';
@@ -100,6 +109,25 @@ export default function App() {
       (error) => {
         console.error("Firestore Error:", error);
         setLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [user]);
+
+  // 3. Fetch Pending Payments (V2)
+  useEffect(() => {
+    if (isDemoMode || !user) return;
+
+    const pendingRef = collection(db, 'artifacts', appId, 'public', 'data', 'pending_payments');
+    
+    const unsubscribe = onSnapshot(pendingRef, 
+      (snapshot) => {
+        const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        setPendingPayments(data.filter(p => p.status === 'pending'));
+      }, 
+      (error) => {
+        console.error("Pending Payments Error:", error);
       }
     );
 
@@ -243,17 +271,36 @@ export default function App() {
             <span className="font-bold text-sm text-slate-800 tracking-tight">Last Moment.</span>
           </div>
 
-          {/* Admin Toggle */}
-          <button 
-            onClick={handleAdminToggle}
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm ${
-              isAdmin 
-                ? 'bg-rose-500 text-white shadow-rose-200' 
-                : 'bg-white text-slate-400 hover:text-blue-600'
-            }`}
-          >
-            <Lock size={16} />
-          </button>
+          {/* Admin Toggle with Pending Badge */}
+          <div className="flex items-center gap-2">
+            {/* Pending Verification Button - Only show when admin */}
+            {isAdmin && pendingPayments.length > 0 && (
+              <button
+                onClick={() => setShowAdminPanel(true)}
+                className="flex items-center gap-1.5 bg-amber-500 text-white px-3 py-2 rounded-full text-xs font-bold shadow-sm animate-pulse"
+              >
+                <Clock size={14} />
+                {pendingPayments.length} Pending
+              </button>
+            )}
+            
+            <button 
+              onClick={handleAdminToggle}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm relative ${
+                isAdmin 
+                  ? 'bg-rose-500 text-white shadow-rose-200' 
+                  : 'bg-white text-slate-400 hover:text-blue-600'
+              }`}
+            >
+              <Lock size={16} />
+              {/* Badge for non-admin showing pending count */}
+              {!isAdmin && pendingPayments.length > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {pendingPayments.length}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -632,10 +679,13 @@ export default function App() {
               {/* Actions */}
               <div className="space-y-3">
                 <button 
-                  onClick={() => setActiveTab('dashboard')}
+                  onClick={() => {
+                    setActiveTab('dashboard');
+                    setShowUploadModal(true);
+                  }}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-full font-bold text-sm shadow-lg shadow-blue-200 hover:shadow-blue-300 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2"
                 >
-                  Selesai Bayar
+                  📤 Upload Bukti Transfer
                 </button>
                 <button 
                   onClick={() => setActiveTab('dashboard')}
@@ -780,6 +830,26 @@ export default function App() {
 
         </nav>
       </div>
+
+      {/* V2: Upload Modal */}
+      <UploadModal 
+        isOpen={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        currentMonth={bulanSekarang}
+      />
+
+      {/* V2: Admin Panel for pending verification */}
+      <AdminPanel 
+        isOpen={showAdminPanel}
+        onClose={() => setShowAdminPanel(false)}
+        pendingPayments={pendingPayments}
+        onApprove={(payment) => {
+          setPendingPayments(prev => prev.filter(p => p.id !== payment.id));
+        }}
+        onReject={(payment) => {
+          setPendingPayments(prev => prev.filter(p => p.id !== payment.id));
+        }}
+      />
 
     </div>
   );
