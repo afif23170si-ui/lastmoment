@@ -5,8 +5,9 @@ import { MEMBERS, IURAN_PER_BULAN } from '../data/members';
 import imageCompression from 'browser-image-compression';
 import { X, Upload, Image, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 
-// Upload API URL - configured via environment variable
-const UPLOAD_API_URL = import.meta.env.VITE_UPLOAD_API_URL || '';
+// Cloudinary Configuration
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || '';
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || '';
 
 export default function UploadModal({ isOpen, onClose, currentMonth }) {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -61,9 +62,9 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
       return;
     }
 
-    // Check if upload API URL is configured
-    if (!UPLOAD_API_URL && !isDemoMode) {
-      setError('Upload API belum dikonfigurasi. Hubungi admin.');
+    // Check if Cloudinary is configured
+    if ((!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) && !isDemoMode) {
+      setError('Cloudinary belum dikonfigurasi. Hubungi admin.');
       return;
     }
 
@@ -85,11 +86,15 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
 
       setUploadProgress(30);
 
-      // Upload to custom server using FormData
+      // Upload to Cloudinary
       const formData = new FormData();
-      formData.append('image', selectedFile);
+      formData.append('file', selectedFile);
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+      formData.append('folder', 'lastmoment');
 
-      const response = await fetch(UPLOAD_API_URL, {
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+      
+      const response = await fetch(cloudinaryUrl, {
         method: 'POST',
         body: formData
       });
@@ -97,16 +102,12 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
       setUploadProgress(60);
 
       if (!response.ok) {
-        throw new Error('Upload failed');
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Upload failed');
       }
 
       const result = await response.json();
-      
-      if (!result.success || !result.url) {
-        throw new Error(result.error || 'Upload failed');
-      }
-
-      const imageUrl = result.url;
+      const imageUrl = result.secure_url;
       
       setUploadProgress(80);
 
