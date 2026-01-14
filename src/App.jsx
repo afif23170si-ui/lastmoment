@@ -45,6 +45,7 @@ import AdminPanel from './components/AdminPanel';
 
 // Import assets
 import albumImage from './assets/album-1.jpg';
+import logoImage from './assets/logo-lm.png';
 
 export default function App() {
   const [user, setUser] = useState(isDemoMode ? { uid: 'demo-user' } : null);
@@ -270,9 +271,9 @@ export default function App() {
       <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-6 pointer-events-none">
         <div className="max-w-md mx-auto flex justify-between items-center pointer-events-auto">
           {/* Logo / Brand */}
-          <div onClick={() => setActiveTab('dashboard')} className="cursor-pointer bg-white px-5 py-2 rounded-full shadow-sm flex items-center gap-2.5 transition-transform active:scale-95">
-            <Heart size={18} className="fill-blue-600 text-blue-600" /> 
-            <span className="font-bold text-sm text-slate-800 tracking-tight">Last Moment.</span>
+          <div onClick={() => setActiveTab('dashboard')} className="cursor-pointer bg-white/50 backdrop-blur-md border border-white/50 shadow-sm rounded-full pl-1 pr-4 py-1 flex items-center gap-3 transition-transform active:scale-95 hover:bg-white/60">
+            <img src={logoImage} alt="Logo" className="w-9 h-9 rounded-full shadow-sm object-cover" /> 
+            <span className="font-bold text-sm text-slate-900 tracking-tight">Last Moment.</span>
           </div>
 
           {/* Admin Toggle with Pending Badge */}
@@ -290,10 +291,10 @@ export default function App() {
             
             <button 
               onClick={handleAdminToggle}
-              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm relative ${
+              className={`w-11 h-11 rounded-full flex items-center justify-center transition-all shadow-sm relative ${
                 isAdmin 
                   ? 'bg-rose-500 text-white shadow-rose-200' 
-                  : 'bg-white text-slate-400 hover:text-blue-600'
+                  : 'bg-white/50 backdrop-blur-md border border-white/50 text-slate-600 hover:text-blue-600 hover:bg-white/60'
               }`}
             >
               <Lock size={16} />
