@@ -382,25 +382,39 @@ export default function App() {
                 </div>
               </motion.section>
 
-              {/* CTA Upload Card - Minimal */}
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
+              {/* 'Ayo Guys' Banner */}
+              <motion.section 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="bg-gradient-to-r from-slate-700 to-slate-900 rounded-xl px-4 py-3 flex items-center justify-between"
+                className="bg-slate-800 rounded-2xl relative overflow-hidden flex items-center shadow-xl h-32"
               >
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">💸</span>
-                  <p className="text-white text-sm font-small">Sudah transfer? Upload buktinya!</p>
+                {/* Text Content */}
+                <div className="z-20 p-5 flex flex-col justify-center h-full relative">
+                  <h2 className="text-lg font-bold text-white leading-none mb-1.5 drop-shadow-lg">Ayo Guys!</h2>
+                  <p className="text-slate-200 text-[11px] font-medium leading-tight mb-3 max-w-[210px] drop-shadow-md">
+                    Maksimalkan moment terakhir kita setelah lulus kuliah
+                  </p>
+                  <button 
+                    onClick={() => setShowUploadModal(true)}
+                    className="w-fit border border-white/20 bg-white/5 backdrop-blur-sm text-white px-4 py-2 rounded-full text-[10px] font-bold hover:bg-white hover:text-slate-900 transition-all active:scale-95 flex items-center gap-1 group shadow-lg"
+                  >
+                    Ayo Nabung <ChevronRight size={10} className="group-hover:translate-x-0.5 transition-transform" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => setShowUploadModal(true)}
-                  className="bg-white text-blue-600 font-bold text-xs py-2 px-3 rounded-full flex items-center gap-1.5 hover:bg-blue-50 transition-colors"
-                >
-                  <Upload size={14} />
-                  Upload
-                </button>
-              </motion.div>
+
+                {/* Right Image - Full Height (65% Width) */}
+                <div className="absolute right-0 top-0 bottom-0 w-[65%]">
+                   <div className="absolute inset-0 bg-gradient-to-l from-transparent via-slate-800/80 to-slate-800 z-10"></div>
+                   <img 
+                     src={albumImage} 
+                     alt="Our Moment" 
+                     className="w-full h-full object-cover grayscale-[0.2]"
+                   />
+                </div>
+              </motion.section>
+
+
 
               {/* Members List (Redesign) */}
               <section className="bg-slate-50/50 backdrop-blur-sm border border-white/60 p-6 rounded-2xl">
