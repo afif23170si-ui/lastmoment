@@ -373,7 +373,7 @@ export default function App() {
                      {/* 3. Sisa */}
                      <div className="flex flex-col border-l border-white/10 pl-3">
                         <span className="text-[9px] text-blue-200 uppercase tracking-wider">Sisa Waktu</span>
-                        <span className="text-xs font-bold">{hitungCountdown().bulan} Bulan ({hitungCountdown().hari} H)</span>
+                        <span className="text-xs font-bold">{hitungCountdown().hari} Hari</span>
                      </div>
                   </div>
 
