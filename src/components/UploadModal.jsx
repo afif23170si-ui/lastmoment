@@ -111,15 +111,15 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
       
       setUploadProgress(80);
 
-      // Save to Firestore pending_payments collection
-      const pendingRef = collection(db, 'artifacts', appId, 'public', 'data', 'pending_payments');
-      await addDoc(pendingRef, {
+      // Auto-approve: Save directly to payments collection
+      const paymentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'payments');
+      await addDoc(paymentsRef, {
         name: selectedName,
         month: currentMonth,
         amount: IURAN_PER_BULAN,
-        proofUrl: imageUrl,
-        uploadedAt: serverTimestamp(),
-        status: 'pending'
+        date: new Date().toISOString(),
+        proofUrl: imageUrl, // Keep proof URL so admin can review/reject if needed
+        status: 'paid'
       });
 
       setUploadProgress(100);

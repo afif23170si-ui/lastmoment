@@ -903,16 +903,13 @@ export default function App() {
         currentMonth={bulanSekarang}
       />
 
-      {/* V2: Admin Panel for pending verification */}
+      {/* V2: Admin Panel for reviewing/rejecting payments */}
       <AdminPanel 
         isOpen={showAdminPanel}
         onClose={() => setShowAdminPanel(false)}
-        pendingPayments={pendingPayments}
-        onApprove={(payment) => {
-          setPendingPayments(prev => prev.filter(p => p.id !== payment.id));
-        }}
+        payments={payments}
         onReject={(payment) => {
-          setPendingPayments(prev => prev.filter(p => p.id !== payment.id));
+          // Payment will be removed from payments via Firebase real-time listener
         }}
       />
 
