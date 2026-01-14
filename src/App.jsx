@@ -688,7 +688,6 @@ export default function App() {
                             className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
                           >
                             <option value="all">Semua Tahun</option>
-                            <option value="2025">2025</option>
                             <option value="2026">2026</option>
                             <option value="2027">2027</option>
                           </select>
