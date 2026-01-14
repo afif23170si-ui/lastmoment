@@ -416,23 +416,17 @@ export default function App() {
                   </button>
                 </div>
 
-                <motion.div 
-                  variants={container}
-                  initial="hidden"
-                  animate="show"
-                  className="grid grid-cols-1 gap-3 relative z-10"
-                >
-                  {MEMBERS.map((member) => {
+                {/* Grouped Member Cards */}
+                {(() => {
+                  // Prepare member data with status
+                  const membersWithStatus = MEMBERS.map((member) => {
                     const nama = member.name;
                     const sudahBayar = listSudahBayarBulanIni.includes(nama);
                     const pendingData = pendingPayments.find(p => p.name === nama && p.month === bulanSekarang);
                     const isPending = !!pendingData;
                     const paymentData = payments.find(p => p.name === nama && p.month === bulanSekarang);
-                    
-                    // Determine status: paid > pending > unpaid
                     const status = sudahBayar ? 'paid' : isPending ? 'pending' : 'unpaid';
                     
-                    // Get date info
                     const getDateInfo = () => {
                       if (status === 'paid' && paymentData?.date) {
                         const d = new Date(paymentData.date);
@@ -445,60 +439,101 @@ export default function App() {
                       return member.role || 'Member';
                     };
                     
-                    return (
-                      <motion.div 
-                        key={nama}
-                        variants={item}
-                        onClick={() => isAdmin && toggleStatusBayar(nama)}
-                        className={`group relative overflow-hidden p-4 rounded-xl transition-all duration-300 ${
-                          status === 'paid'
-                          ? 'bg-white shadow-sm border-l-4 border-l-emerald-500 border-y border-r border-slate-100' 
-                          : status === 'pending'
-                          ? 'bg-amber-50 shadow-sm border-l-4 border-l-amber-500 border-y border-r border-amber-100'
-                          : 'bg-slate-100 border border-slate-200 opacity-70 grayscale-[0.8] hover:grayscale-0 hover:opacity-100 hover:bg-white hover:shadow-md'
-                        } ${isAdmin ? 'cursor-pointer active:scale-[0.99]' : ''}`}
-                      >
-                        <div className="flex items-center justify-between relative z-10">
-                          <div className="flex items-center gap-4">
-                            {/* Avatar */}
-                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm transition-colors ${
-                              status === 'paid'
-                                ? 'bg-emerald-50 text-emerald-600' 
-                                : status === 'pending'
-                                ? 'bg-amber-100 text-amber-600'
-                                : 'bg-slate-200 text-slate-400'
-                            }`}>
-                              {nama.charAt(0)}
-                            </div>
-                            
-                            {/* Info */}
-                            <div>
-                              <p className={`text-sm font-bold ${status === 'paid' ? 'text-slate-800' : status === 'pending' ? 'text-amber-800' : 'text-slate-500'}`}>{nama}</p>
-                              <p className="text-[10px] font-medium text-slate-400">{getDateInfo()}</p>
-                            </div>
-                          </div>
+                    return { ...member, nama, status, getDateInfo };
+                  });
 
-                          {/* Status Badge */}
-                          <div className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 ${
-                            status === 'paid'
-                              ? 'bg-emerald-50 text-emerald-600' 
-                              : status === 'pending'
+                  const paidMembers = membersWithStatus.filter(m => m.status === 'paid');
+                  const pendingMembers = membersWithStatus.filter(m => m.status === 'pending');
+                  const unpaidMembers = membersWithStatus.filter(m => m.status === 'unpaid');
+
+                  const renderMemberCard = (m, index) => (
+                    <motion.div 
+                      key={m.nama}
+                      variants={item}
+                      onClick={() => isAdmin && toggleStatusBayar(m.nama)}
+                      className={`group relative overflow-hidden p-3 rounded-xl transition-all duration-300 ${
+                        m.status === 'paid'
+                        ? 'bg-white shadow-sm border border-emerald-100' 
+                        : m.status === 'pending'
+                        ? 'bg-amber-50/50 border border-amber-100'
+                        : 'bg-slate-50 border border-slate-200'
+                      } ${isAdmin ? 'cursor-pointer active:scale-[0.99]' : ''}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
+                            m.status === 'paid'
+                              ? 'bg-emerald-100 text-emerald-600' 
+                              : m.status === 'pending'
                               ? 'bg-amber-100 text-amber-600'
                               : 'bg-slate-200 text-slate-400'
                           }`}>
-                             {status === 'paid' ? (
-                               <>Lunas <CheckCircle2 size={10} /></>
-                             ) : status === 'pending' ? (
-                               <>Pending <Clock size={10} /></>
-                             ) : (
-                               <>Belum <Circle size={10} /></>
-                             )}
+                            {m.nama.charAt(0)}
+                          </div>
+                          <div>
+                            <p className={`text-sm font-bold ${m.status === 'paid' ? 'text-slate-800' : m.status === 'pending' ? 'text-amber-800' : 'text-slate-500'}`}>{m.nama}</p>
+                            <p className="text-[10px] font-medium text-slate-400">{m.getDateInfo()}</p>
                           </div>
                         </div>
-                      </motion.div>
-                    );
-                  })}
-                </motion.div>
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                          m.status === 'paid'
+                            ? 'bg-emerald-500 text-white' 
+                            : m.status === 'pending'
+                            ? 'bg-amber-500 text-white'
+                            : 'bg-slate-200 text-slate-400'
+                        }`}>
+                          {m.status === 'paid' ? <CheckCircle2 size={12} /> : m.status === 'pending' ? <Clock size={12} /> : <Circle size={10} />}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+
+                  return (
+                    <motion.div variants={container} initial="hidden" animate="show" className="space-y-4">
+                      {/* Sudah Bayar Section */}
+                      {paidMembers.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                            <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider">Sudah Bayar</span>
+                            <span className="text-[10px] text-slate-400">({paidMembers.length})</span>
+                          </div>
+                          <div className="grid grid-cols-1 gap-2">
+                            {paidMembers.map(renderMemberCard)}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Menunggu Verifikasi Section */}
+                      {pendingMembers.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                            <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">Menunggu Verifikasi</span>
+                            <span className="text-[10px] text-slate-400">({pendingMembers.length})</span>
+                          </div>
+                          <div className="grid grid-cols-1 gap-2">
+                            {pendingMembers.map(renderMemberCard)}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Belum Bayar Section */}
+                      {unpaidMembers.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-2 h-2 rounded-full bg-slate-300"></div>
+                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Belum Bayar</span>
+                            <span className="text-[10px] text-slate-400">({unpaidMembers.length})</span>
+                          </div>
+                          <div className="grid grid-cols-1 gap-2">
+                            {unpaidMembers.map(renderMemberCard)}
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  );
+                })()}
               </section>
             </motion.div>
           )}
