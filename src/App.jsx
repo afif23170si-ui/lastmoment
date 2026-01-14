@@ -430,9 +430,9 @@ export default function App() {
                   </div>
                   <button 
                     onClick={() => setActiveTab('history')}
-                    className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-0.5 mt-1"
+                    className="text-[10px] font-bold text-blue-600 border border-blue-600 hover:bg-blue-50 px-4 py-2 rounded-full flex items-center gap-1 transition-all active:scale-95"
                   >
-                    Lihat Semua <ChevronRight size={14} />
+                    Lihat Semua <ChevronRight size={12} />
                   </button>
                 </div>
 
