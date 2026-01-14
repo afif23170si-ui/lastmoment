@@ -29,7 +29,9 @@ import {
   X,
   Eye,
   Upload,
-  ChevronDown
+  ChevronDown,
+  ChevronRight,
+  Map
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
