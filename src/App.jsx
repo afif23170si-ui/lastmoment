@@ -60,7 +60,8 @@ export default function App() {
   const [pendingPayments, setPendingPayments] = useState([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
-  const [historyFilter, setHistoryFilter] = useState('all'); // 'all' or month name
+  const [historyYear, setHistoryYear] = useState('all'); // 'all', '2025', '2026', '2027'
+  const [historyMonth, setHistoryMonth] = useState('all'); // 'all', 'Januari', etc.
 
   // Admin PIN from environment variable
   const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '2027';
@@ -678,34 +679,50 @@ export default function App() {
                         <h3 className="text-xl font-black text-slate-800">Riwayat Setoran</h3>
                         <p className="text-xs text-slate-400 mt-1">Semua transaksi tercatat rapi.</p>
                       </div>
-                      {/* Month Filter Dropdown */}
-                      <select
-                        value={historyFilter}
-                        onChange={(e) => setHistoryFilter(e.target.value)}
-                        className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="all">Semua Bulan</option>
-                        <option value="Januari 2026">Januari 2026</option>
-                        <option value="Februari 2026">Februari 2026</option>
-                        <option value="Maret 2026">Maret 2026</option>
-                        <option value="April 2026">April 2026</option>
-                        <option value="Mei 2026">Mei 2026</option>
-                        <option value="Juni 2026">Juni 2026</option>
-                        <option value="Juli 2026">Juli 2026</option>
-                        <option value="Agustus 2026">Agustus 2026</option>
-                        <option value="September 2026">September 2026</option>
-                        <option value="Oktober 2026">Oktober 2026</option>
-                        <option value="November 2026">November 2026</option>
-                        <option value="Desember 2026">Desember 2026</option>
-                      </select>
+                      <div className="flex gap-2">
+                        {/* Year Filter */}
+                        <select
+                          value={historyYear}
+                          onChange={(e) => setHistoryYear(e.target.value)}
+                          className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="all">Semua Tahun</option>
+                          <option value="2025">2025</option>
+                          <option value="2026">2026</option>
+                          <option value="2027">2027</option>
+                        </select>
+
+                        {/* Month Filter */}
+                        <select
+                          value={historyMonth}
+                          onChange={(e) => setHistoryMonth(e.target.value)}
+                          className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="all">Semua Bulan</option>
+                          <option value="Januari">Januari</option>
+                          <option value="Februari">Februari</option>
+                          <option value="Maret">Maret</option>
+                          <option value="April">April</option>
+                          <option value="Mei">Mei</option>
+                          <option value="Juni">Juni</option>
+                          <option value="Juli">Juli</option>
+                          <option value="Agustus">Agustus</option>
+                          <option value="September">September</option>
+                          <option value="Oktober">Oktober</option>
+                          <option value="November">November</option>
+                          <option value="Desember">Desember</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                   
                   <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
                     {(() => {
-                      const filteredPayments = historyFilter === 'all' 
-                        ? payments 
-                        : payments.filter(p => p.month === historyFilter);
+                      const filteredPayments = payments.filter(p => {
+                        const monthMatch = historyMonth === 'all' || p.month.startsWith(historyMonth);
+                        const yearMatch = historyYear === 'all' || p.month.includes(historyYear);
+                        return monthMatch && yearMatch;
+                      });
                       
                       if (filteredPayments.length === 0) {
                         return (
@@ -714,7 +731,7 @@ export default function App() {
                                <History size={32} />
                             </div>
                             <p className="text-slate-400 font-medium text-sm">
-                              {historyFilter === 'all' ? 'Belum ada data.' : `Tidak ada data untuk ${historyFilter}`}
+                              Tidak ada data.
                             </p>
                           </div>
                         );
