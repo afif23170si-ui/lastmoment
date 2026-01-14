@@ -42,6 +42,7 @@ import { MEMBERS, TARGET_SALDO, IURAN_PER_BULAN, TANGGAL_LULUS } from './data/me
 // Import components
 import UploadModal from './components/UploadModal';
 import AdminPanel from './components/AdminPanel';
+import MusicPlayer from './components/MusicPlayer';
 
 // Import assets
 import albumImage from './assets/album-1.jpg';
@@ -989,6 +990,7 @@ export default function App() {
         }}
       />
 
+      <MusicPlayer />
     </div>
   );
 }
