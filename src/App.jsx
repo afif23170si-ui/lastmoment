@@ -146,7 +146,8 @@ export default function App() {
   const hitungCountdown = () => {
     const selisih = TANGGAL_LULUS - new Date();
     const hari = Math.floor(selisih / (1000 * 60 * 60 * 24));
-    return hari > 0 ? hari : 0;
+    const bulan = Math.floor(hari / 30);
+    return { hari: hari > 0 ? hari : 0, bulan: bulan > 0 ? bulan : 0 };
   };
 
   // --- Admin Handlers (Demo Mode: local state only) ---
@@ -372,7 +373,7 @@ export default function App() {
                      {/* 3. Sisa */}
                      <div className="flex flex-col border-l border-white/10 pl-3">
                         <span className="text-[9px] text-blue-200 uppercase tracking-wider">Waktu</span>
-                        <span className="text-xs font-bold">{hitungCountdown()} Hari</span>
+                        <span className="text-xs font-bold">{hitungCountdown().hari} Hari / {hitungCountdown().bulan} Bln</span>
                      </div>
                   </div>
 
