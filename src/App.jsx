@@ -899,7 +899,7 @@ export default function App() {
 
       {/* Bottom Floating Navigation */}
       <div className="fixed bottom-8 left-0 right-0 z-40 pointer-events-none px-4">
-        <nav className="w-full max-w-md mx-auto bg-white p-2 rounded-[2.5rem] shadow-[0_20px_50px_rgba(8,112,184,0.15)] ring-1 ring-slate-100 border border-white/50 flex justify-between items-center pointer-events-auto relative">
+        <nav className="w-full max-w-md mx-auto bg-white/50 backdrop-blur-md p-2 rounded-full shadow-lg border border-white/50 flex justify-between items-center pointer-events-auto relative">
           
           {/* Active Background Pill (Absolute Positioned) */}
           {/* Note: In a real advanced setup we'd calculate x/width, but for simple grid we'll use individual button backgrounds or simple color transitions. 
