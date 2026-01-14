@@ -273,14 +273,14 @@ export default function App() {
 
           {/* Admin Toggle with Pending Badge */}
           <div className="flex items-center gap-2">
-            {/* Pending Verification Button - Only show when admin */}
-            {isAdmin && pendingPayments.length > 0 && (
+            {/* Review Button - Show when admin */}
+            {isAdmin && (
               <button
                 onClick={() => setShowAdminPanel(true)}
-                className="flex items-center gap-1.5 bg-amber-500 text-white px-3 py-2 rounded-full text-xs font-bold shadow-sm animate-pulse"
+                className="flex items-center gap-1.5 bg-blue-500 text-white px-3 py-2 rounded-full text-xs font-bold shadow-sm"
               >
-                <Clock size={14} />
-                {pendingPayments.length} Pending
+                <Eye size={14} />
+                Review
               </button>
             )}
             
