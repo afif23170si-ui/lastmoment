@@ -674,17 +674,17 @@ export default function App() {
             >
                <div className="glass h-full rounded-2xl flex flex-col overflow-hidden">
                   <div className="p-6 border-b border-blue-50 bg-white/50 backdrop-blur-xl z-10">
-                    <div className="flex justify-between items-start">
+                    <div className="flex flex-col gap-4">
                       <div>
                         <h3 className="text-xl font-black text-slate-800">Riwayat Setoran</h3>
                         <p className="text-xs text-slate-400 mt-1">Semua transaksi tercatat rapi.</p>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="grid grid-cols-2 gap-3">
                         {/* Year Filter */}
                         <select
                           value={historyYear}
                           onChange={(e) => setHistoryYear(e.target.value)}
-                          className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
                         >
                           <option value="all">Semua Tahun</option>
                           <option value="2025">2025</option>
@@ -696,7 +696,7 @@ export default function App() {
                         <select
                           value={historyMonth}
                           onChange={(e) => setHistoryMonth(e.target.value)}
-                          className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
                         >
                           <option value="all">Semua Bulan</option>
                           <option value="Januari">Januari</option>
