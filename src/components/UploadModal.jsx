@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db, appId, isDemoMode } from '../config/firebase';
 import { MEMBERS, IURAN_PER_BULAN } from '../data/members';
 import imageCompression from 'browser-image-compression';
-import { X, Upload, Image, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
+import { X, Upload, Image, CheckCircle, Loader2, AlertCircle, ChevronDown, Calendar } from 'lucide-react';
 
 // Cloudinary Configuration
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || '';
@@ -13,11 +13,36 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [selectedName, setSelectedName] = useState('');
+  const [selectedPeriod, setSelectedPeriod] = useState(currentMonth);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
+
+  // Generate period options from Jan 2026 to current month + 1
+  const periodOptions = useMemo(() => {
+    const months = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    const options = [];
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonthIndex = now.getMonth();
+    
+    // Generate from Jan 2026 to current month + 1 (so next month is available)
+    for (let year = 2026; year <= 2027; year++) {
+      for (let monthIdx = 0; monthIdx < 12; monthIdx++) {
+        // Stop at current month + 1
+        if (year > currentYear || (year === currentYear && monthIdx > currentMonthIndex + 1)) {
+          break;
+        }
+        options.push(`${months[monthIdx]} ${year}`);
+      }
+    }
+    return options;
+  }, []);
 
   if (!isOpen) return null;
 
@@ -115,7 +140,7 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
       const paymentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'payments');
       await addDoc(paymentsRef, {
         name: selectedName,
-        month: currentMonth,
+        month: selectedPeriod,
         amount: IURAN_PER_BULAN,
         date: new Date().toISOString(),
         proofUrl: imageUrl, // Keep proof URL so admin can review/reject if needed
@@ -141,6 +166,7 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
     setSelectedFile(null);
     setPreview(null);
     setSelectedName('');
+    setSelectedPeriod(currentMonth);
     setUploading(false);
     setUploadProgress(0);
     setSuccess(false);
@@ -163,7 +189,7 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
         <div className="flex justify-between items-start mb-6">
           <div>
             <h3 className="text-xl font-black">Upload Bukti Transfer</h3>
-            <p className="text-sm text-slate-500">Periode: {currentMonth}</p>
+            <p className="text-sm text-slate-500">Periode: <span className="font-bold text-slate-700">{selectedPeriod}</span></p>
           </div>
           <button 
             onClick={handleClose}
@@ -240,6 +266,28 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
                   <option key={m.name} value={m.name}>{m.name}</option>
                 ))}
               </select>
+            </div>
+
+            {/* Period Selector */}
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">
+                <Calendar size={14} className="inline mr-1" />
+                Periode Pembayaran
+              </label>
+              <div className="relative">
+                <select
+                  value={selectedPeriod}
+                  onChange={(e) => setSelectedPeriod(e.target.value)}
+                  disabled={uploading}
+                  className="w-full p-4 border-2 border-slate-200 rounded-2xl text-sm font-medium focus:border-indigo-500 outline-none disabled:opacity-50 appearance-none"
+                >
+                  {periodOptions.map((period) => (
+                    <option key={period} value={period}>{period}</option>
+                  ))}
+                </select>
+                <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              </div>
+              <p className="text-xs text-slate-400 mt-1">Pilih bulan lain jika kamu bayar untuk periode sebelumnya</p>
             </div>
 
             {/* Error Message */}
