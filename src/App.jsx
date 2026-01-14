@@ -412,7 +412,7 @@ export default function App() {
                 </div>
                 <button
                   onClick={() => setShowUploadModal(true)}
-                  className="bg-white text-purple-600 font-bold text-xs py-2 px-3 rounded-lg flex items-center gap-1.5 hover:bg-purple-50 transition-colors"
+                  className="bg-white text-blue-600 font-bold text-xs py-2 px-3 rounded-lg flex items-center gap-1.5 hover:bg-blue-50 transition-colors"
                 >
                   <Upload size={14} />
                   Upload
