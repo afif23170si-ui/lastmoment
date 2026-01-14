@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Music, Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function MusicPlayer() {
+export default function MusicPlayer({ className }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef(null);
@@ -35,7 +35,7 @@ export default function MusicPlayer() {
   };
 
   return (
-    <div className="fixed bottom-6 left-6 z-50 flex items-center gap-2">
+    <div className={`flex items-center gap-2 ${className}`}>
       <audio
         ref={audioRef}
         src="/music/diakhir-perang.mp3"
@@ -46,8 +46,10 @@ export default function MusicPlayer() {
       {/* Main Player Button */}
       <motion.button
         onClick={togglePlay}
-        className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20 backdrop-blur-md transition-all ${
-          isPlaying ? 'bg-indigo-600 text-white' : 'bg-white/80 text-slate-600'
+        className={`w-10 h-10 rounded-full flex items-center justify-center shadow-sm border transition-all ${
+          isPlaying 
+            ? 'bg-indigo-600 text-white border-indigo-500' 
+            : 'bg-white text-slate-400 border-slate-200 hover:text-indigo-600 hover:border-indigo-200'
         }`}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}

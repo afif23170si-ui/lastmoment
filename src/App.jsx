@@ -277,8 +277,13 @@ export default function App() {
             <span className="font-bold text-sm text-slate-900 tracking-tight">Last Moment.</span>
           </div>
 
-          {/* Admin Toggle with Pending Badge */}
+          {/* Admin Toggle & Music Player */}
           <div className="flex items-center gap-2">
+            
+            {/* Music Player */}
+            <MusicPlayer />
+
+            {/* Review Button - Show when admin */}
             {/* Review Button - Show when admin */}
             {isAdmin && (
               <button
@@ -990,7 +995,7 @@ export default function App() {
         }}
       />
 
-      <MusicPlayer />
+
     </div>
   );
 }
