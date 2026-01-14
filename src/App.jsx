@@ -404,7 +404,7 @@ export default function App() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.15 }}
-                className="bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl px-4 py-3 flex items-center justify-between"
+                className="bg-gradient-to-r from-slate-700 to-slate-900 rounded-xl px-4 py-3 flex items-center justify-between"
               >
                 <div className="flex items-center gap-2">
                   <span className="text-lg">💸</span>
