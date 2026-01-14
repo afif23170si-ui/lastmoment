@@ -20,24 +20,15 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
 
-  // Generate period options from Jan 2026 to current month + 1
+  // Generate all period options from Jan 2026 to Dec 2027
   const periodOptions = useMemo(() => {
     const months = [
       'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
       'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
     ];
     const options = [];
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentMonthIndex = now.getMonth();
-    
-    // Generate from Jan 2026 to current month + 1 (so next month is available)
     for (let year = 2026; year <= 2027; year++) {
       for (let monthIdx = 0; monthIdx < 12; monthIdx++) {
-        // Stop at current month + 1
-        if (year > currentYear || (year === currentYear && monthIdx > currentMonthIndex + 1)) {
-          break;
-        }
         options.push(`${months[monthIdx]} ${year}`);
       }
     }
@@ -250,44 +241,44 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
               )}
             </div>
 
-            {/* Name Dropdown */}
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">
-                Nama Kamu
-              </label>
-              <select
-                value={selectedName}
-                onChange={(e) => setSelectedName(e.target.value)}
-                disabled={uploading}
-                className="w-full p-4 border-2 border-slate-200 rounded-2xl text-sm font-medium focus:border-indigo-500 outline-none disabled:opacity-50"
-              >
-                <option value="">-- Pilih Nama --</option>
-                {MEMBERS.map((m) => (
-                  <option key={m.name} value={m.name}>{m.name}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Period Selector */}
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">
-                <Calendar size={14} className="inline mr-1" />
-                Periode Pembayaran
-              </label>
-              <div className="relative">
-                <select
-                  value={selectedPeriod}
-                  onChange={(e) => setSelectedPeriod(e.target.value)}
-                  disabled={uploading}
-                  className="w-full p-4 border-2 border-slate-200 rounded-2xl text-sm font-medium focus:border-indigo-500 outline-none disabled:opacity-50 appearance-none"
-                >
-                  {periodOptions.map((period) => (
-                    <option key={period} value={period}>{period}</option>
-                  ))}
-                </select>
-                <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            {/* Name & Period - Compact Grid */}
+            <div className="grid grid-cols-2 gap-3">
+              {/* Name Dropdown */}
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1.5">Nama</label>
+                <div className="relative">
+                  <select
+                    value={selectedName}
+                    onChange={(e) => setSelectedName(e.target.value)}
+                    disabled={uploading}
+                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-sm font-medium focus:border-blue-500 outline-none disabled:opacity-50 appearance-none"
+                  >
+                    <option value="">Pilih...</option>
+                    {MEMBERS.map((m) => (
+                      <option key={m.name} value={m.name}>{m.name}</option>
+                    ))}
+                  </select>
+                  <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                </div>
               </div>
-              <p className="text-xs text-slate-400 mt-1">Pilih bulan lain jika kamu bayar untuk periode sebelumnya</p>
+
+              {/* Period Dropdown */}
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1.5">Periode</label>
+                <div className="relative">
+                  <select
+                    value={selectedPeriod}
+                    onChange={(e) => setSelectedPeriod(e.target.value)}
+                    disabled={uploading}
+                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-sm font-medium focus:border-blue-500 outline-none disabled:opacity-50 appearance-none"
+                  >
+                    {periodOptions.map((period) => (
+                      <option key={period} value={period}>{period}</option>
+                    ))}
+                  </select>
+                  <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                </div>
+              </div>
             </div>
 
             {/* Error Message */}
