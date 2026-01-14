@@ -399,34 +399,25 @@ export default function App() {
                  </div>
               </motion.section>
 
-              {/* CTA Upload Card */}
-              <motion.section
+              {/* CTA Upload Card - Minimal */}
+              <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.15 }}
-                className="bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 rounded-2xl p-5 shadow-lg shadow-purple-200 relative overflow-hidden"
+                className="bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl px-4 py-3 flex items-center justify-between"
               >
-                {/* Background decoration */}
-                <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
-                <div className="absolute -left-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
-                
-                <div className="relative z-10">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-2xl">💸</span>
-                    <h3 className="text-white font-bold text-lg">Sudah Transfer?</h3>
-                  </div>
-                  <p className="text-white/80 text-sm mb-4">
-                    Upload bukti bayarmu sekarang dan langsung tercatat!
-                  </p>
-                  <button
-                    onClick={() => setShowUploadModal(true)}
-                    className="w-full bg-white text-purple-600 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 hover:bg-purple-50 transition-colors shadow-lg"
-                  >
-                    <Upload size={18} />
-                    Upload Bukti Bayar
-                  </button>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">💸</span>
+                  <p className="text-white text-sm font-medium">Sudah transfer? Upload buktinya!</p>
                 </div>
-              </motion.section>
+                <button
+                  onClick={() => setShowUploadModal(true)}
+                  className="bg-white text-purple-600 font-bold text-xs py-2 px-3 rounded-lg flex items-center gap-1.5 hover:bg-purple-50 transition-colors"
+                >
+                  <Upload size={14} />
+                  Upload
+                </button>
+              </motion.div>
 
               {/* Members List (Redesign) */}
               <section className="bg-slate-50/50 backdrop-blur-sm border border-white/60 p-6 rounded-2xl">
