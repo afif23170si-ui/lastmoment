@@ -20,7 +20,7 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
 
-  // Generate all period options from Jan 2026 to Dec 2027
+  // Generate all period options from Jan 2026 to Sep 2027
   const periodOptions = useMemo(() => {
     const months = [
       'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -28,7 +28,8 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
     ];
     const options = [];
     for (let year = 2026; year <= 2027; year++) {
-      for (let monthIdx = 0; monthIdx < 12; monthIdx++) {
+      const maxMonth = year === 2027 ? 9 : 12; // Sep = index 8, so 9 months
+      for (let monthIdx = 0; monthIdx < maxMonth; monthIdx++) {
         options.push(`${months[monthIdx]} ${year}`);
       }
     }
