@@ -59,6 +59,7 @@ export default function App() {
   const [pendingPayments, setPendingPayments] = useState([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [historyFilter, setHistoryFilter] = useState('all'); // 'all' or month name
 
   // Admin PIN from environment variable
   const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '2027';
@@ -642,7 +643,7 @@ export default function App() {
           )}
 
           {/* VIEW: HISTORY */}
-          {activeTab === 'history' && (
+           {activeTab === 'history' && (
             <motion.div 
                key="history"
                initial="initial" animate="animate" exit="exit" variants={fadeIn}
@@ -650,20 +651,54 @@ export default function App() {
             >
                <div className="glass h-full rounded-2xl flex flex-col overflow-hidden">
                   <div className="p-6 border-b border-blue-50 bg-white/50 backdrop-blur-xl z-10">
-                    <h3 className="text-xl font-black text-slate-800">Riwayat Setoran</h3>
-                    <p className="text-xs text-slate-400 mt-1">Semua transaksi tercatat rapi.</p>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-xl font-black text-slate-800">Riwayat Setoran</h3>
+                        <p className="text-xs text-slate-400 mt-1">Semua transaksi tercatat rapi.</p>
+                      </div>
+                      {/* Month Filter Dropdown */}
+                      <select
+                        value={historyFilter}
+                        onChange={(e) => setHistoryFilter(e.target.value)}
+                        className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="all">Semua Bulan</option>
+                        <option value="Januari 2026">Januari 2026</option>
+                        <option value="Februari 2026">Februari 2026</option>
+                        <option value="Maret 2026">Maret 2026</option>
+                        <option value="April 2026">April 2026</option>
+                        <option value="Mei 2026">Mei 2026</option>
+                        <option value="Juni 2026">Juni 2026</option>
+                        <option value="Juli 2026">Juli 2026</option>
+                        <option value="Agustus 2026">Agustus 2026</option>
+                        <option value="September 2026">September 2026</option>
+                        <option value="Oktober 2026">Oktober 2026</option>
+                        <option value="November 2026">November 2026</option>
+                        <option value="Desember 2026">Desember 2026</option>
+                      </select>
+                    </div>
                   </div>
                   
                   <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
-                    {payments.length === 0 ? (
-                      <div className="flex flex-col items-center justify-center h-64 text-center">
-                        <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mb-4">
-                           <History size={32} />
-                        </div>
-                        <p className="text-slate-400 font-medium text-sm">Belum ada data.</p>
-                      </div>
-                    ) : (
-                      payments
+                    {(() => {
+                      const filteredPayments = historyFilter === 'all' 
+                        ? payments 
+                        : payments.filter(p => p.month === historyFilter);
+                      
+                      if (filteredPayments.length === 0) {
+                        return (
+                          <div className="flex flex-col items-center justify-center h-64 text-center">
+                            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mb-4">
+                               <History size={32} />
+                            </div>
+                            <p className="text-slate-400 font-medium text-sm">
+                              {historyFilter === 'all' ? 'Belum ada data.' : `Tidak ada data untuk ${historyFilter}`}
+                            </p>
+                          </div>
+                        );
+                      }
+                      
+                      return filteredPayments
                         .sort((a, b) => b.timestamp - a.timestamp)
                         .map((p, i) => (
                           <motion.div 
@@ -691,8 +726,8 @@ export default function App() {
                               </span>
                             </div>
                           </motion.div>
-                        ))
-                    )}
+                        ));
+                    })()}
                   </div>
                </div>
             </motion.div>
