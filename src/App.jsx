@@ -382,24 +382,6 @@ export default function App() {
                 </div>
               </motion.section>
 
-              {/* NEW: Album Card */}
-              <motion.section 
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
-                className="rounded-2xl overflow-hidden h-48 relative shadow-lg group cursor-pointer"
-              >
-                 <img 
-                   src={albumImage} 
-                   alt="Our Moments" 
-                   className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                 />
-                 <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
-                    <h3 className="text-white font-bold text-lg">Our Journey</h3>
-                    <p className="text-white/70 text-xs">Kumpulan momen bareng sahabat yang bikin kangen.</p>
-                 </div>
-              </motion.section>
-
               {/* CTA Upload Card - Minimal */}
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
