@@ -30,7 +30,8 @@ import {
   ChevronRight,
   Sparkles,
   Map,
-  Eye
+  Eye,
+  Upload
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -396,6 +397,35 @@ export default function App() {
                     <h3 className="text-white font-bold text-lg">Our Journey</h3>
                     <p className="text-white/70 text-xs">Kumpulan momen bareng sahabat yang bikin kangen.</p>
                  </div>
+              </motion.section>
+
+              {/* CTA Upload Card */}
+              <motion.section
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.15 }}
+                className="bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 rounded-2xl p-5 shadow-lg shadow-purple-200 relative overflow-hidden"
+              >
+                {/* Background decoration */}
+                <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+                <div className="absolute -left-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-2xl">💸</span>
+                    <h3 className="text-white font-bold text-lg">Sudah Transfer?</h3>
+                  </div>
+                  <p className="text-white/80 text-sm mb-4">
+                    Upload bukti bayarmu sekarang dan langsung tercatat!
+                  </p>
+                  <button
+                    onClick={() => setShowUploadModal(true)}
+                    className="w-full bg-white text-purple-600 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 hover:bg-purple-50 transition-colors shadow-lg"
+                  >
+                    <Upload size={18} />
+                    Upload Bukti Bayar
+                  </button>
+                </div>
               </motion.section>
 
               {/* Members List (Redesign) */}
