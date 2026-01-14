@@ -12,6 +12,29 @@ export default function MusicPlayer({ className }) {
     if (audioRef.current) {
       audioRef.current.volume = 0.5;
     }
+
+    // Workaround for browser auto-play policy:
+    // Listen for the first user interaction (click/touch) to start playback
+    const handleFirstInteraction = () => {
+      if (audioRef.current && !isPlaying) {
+        audioRef.current.play()
+          .then(() => {
+            setIsPlaying(true);
+            // Remove listener after successful play
+            document.removeEventListener('click', handleFirstInteraction);
+            document.removeEventListener('touchstart', handleFirstInteraction);
+          })
+          .catch(err => console.log("Auto-play blocked:", err));
+      }
+    };
+
+    document.addEventListener('click', handleFirstInteraction);
+    document.addEventListener('touchstart', handleFirstInteraction);
+
+    return () => {
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('touchstart', handleFirstInteraction);
+    };
   }, []);
 
   const togglePlay = () => {
