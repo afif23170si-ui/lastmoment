@@ -270,7 +270,7 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
             <button
               onClick={handleUpload}
               disabled={uploading || !selectedFile || !selectedName}
-              className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black shadow-xl shadow-indigo-100 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-full font-bold text-sm shadow-lg shadow-slate-200 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {uploading ? (
                 <>

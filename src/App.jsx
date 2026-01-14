@@ -408,7 +408,7 @@ export default function App() {
               >
                 <div className="flex items-center gap-2">
                   <span className="text-lg">💸</span>
-                  <p className="text-white text-sm font-medium">Sudah transfer? Upload buktinya!</p>
+                  <p className="text-white text-sm font-small">Sudah transfer? Upload buktinya!</p>
                 </div>
                 <button
                   onClick={() => setShowUploadModal(true)}
