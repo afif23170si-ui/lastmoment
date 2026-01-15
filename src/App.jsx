@@ -931,39 +931,35 @@ export default function App() {
           {/* Note: In a real advanced setup we'd calculate x/width, but for simple grid we'll use individual button backgrounds or simple color transitions. 
               Let's use a cleaner approach: Icons only, active state has a glowing dot and color change. */}
 
-          {/* 1. Dashboard */}
+          {/* 1. Home */}
           <button
             onClick={() => setActiveTab('dashboard')}
-            className={`w-12 h-12 rounded-full flex flex-col items-center justify-center transition-all duration-300 ${
-              activeTab === 'dashboard' ? 'text-blue-600' : 'text-slate-300 hover:text-slate-400'
+            className={`flex-1 flex flex-col items-center justify-center transition-all duration-300 py-1 ${
+              activeTab === 'dashboard' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
             }`}
           >
-            <TrendingUp size={24} strokeWidth={activeTab === 'dashboard' ? 2.5 : 2} />
-            {activeTab === 'dashboard' && (
-              <motion.div layoutId="nav-dot" className="w-1 h-1 bg-blue-600 rounded-full mt-1" />
-            )}
+            <TrendingUp size={22} strokeWidth={activeTab === 'dashboard' ? 2.5 : 2} />
+            <span className="text-[10px] font-bold mt-1">Home</span>
           </button>
 
           {/* 2. Trip */}
           <button
             onClick={() => setActiveTab('trip')}
-            className={`w-12 h-12 rounded-full flex flex-col items-center justify-center transition-all duration-300 ${
-              activeTab === 'trip' ? 'text-blue-600' : 'text-slate-300 hover:text-slate-400'
+            className={`flex-1 flex flex-col items-center justify-center transition-all duration-300 py-1 ${
+              activeTab === 'trip' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
             }`}
           >
-            <Map size={24} strokeWidth={activeTab === 'trip' ? 2.5 : 2} />
-            {activeTab === 'trip' && (
-              <motion.div layoutId="nav-dot" className="w-1 h-1 bg-blue-600 rounded-full mt-1" />
-            )}
+            <Map size={22} strokeWidth={activeTab === 'trip' ? 2.5 : 2} />
+            <span className="text-[10px] font-bold mt-1">Trip</span>
           </button>
 
           {/* 3. QR Payment (Floating Center) */}
-          <div className="relative -mt-8">
+          <div className="relative -mt-10 mx-2">
             <motion.button 
               whileHover={{ scale: 1.05, rotate: 90 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setActiveTab('payment')}
-              className="w-16 h-16 bg-gradient-to-tr from-blue-600 to-blue-500 rounded-full shadow-lg shadow-blue-500/40 flex items-center justify-center text-white border-4 border-[#f8fafc] z-20"
+              className="w-16 h-16 bg-gradient-to-tr from-blue-600 to-blue-500 rounded-full shadow-xl shadow-blue-500/30 flex items-center justify-center text-white border-[5px] border-[#f8fafc] z-20"
             >
               <QrCode size={26} />
             </motion.button>
@@ -972,27 +968,23 @@ export default function App() {
           {/* 4. History */}
           <button
             onClick={() => setActiveTab('history')}
-            className={`w-12 h-12 rounded-full flex flex-col items-center justify-center transition-all duration-300 ${
-              activeTab === 'history' ? 'text-blue-600' : 'text-slate-300 hover:text-slate-400'
+            className={`flex-1 flex flex-col items-center justify-center transition-all duration-300 py-1 ${
+              activeTab === 'history' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
             }`}
           >
-            <History size={24} strokeWidth={activeTab === 'history' ? 2.5 : 2} />
-            {activeTab === 'history' && (
-              <motion.div layoutId="nav-dot" className="w-1 h-1 bg-blue-600 rounded-full mt-1" />
-            )}
+            <History size={22} strokeWidth={activeTab === 'history' ? 2.5 : 2} />
+            <span className="text-[10px] font-bold mt-1">Riwayat</span>
           </button>
 
           {/* 5. Info */}
           <button
             onClick={() => setActiveTab('info')}
-            className={`w-12 h-12 rounded-full flex flex-col items-center justify-center transition-all duration-300 ${
-              activeTab === 'info' ? 'text-blue-600' : 'text-slate-300 hover:text-slate-400'
+            className={`flex-1 flex flex-col items-center justify-center transition-all duration-300 py-1 ${
+              activeTab === 'info' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
             }`}
           >
-            <Info size={24} strokeWidth={activeTab === 'info' ? 2.5 : 2} />
-            {activeTab === 'info' && (
-              <motion.div layoutId="nav-dot" className="w-1 h-1 bg-blue-600 rounded-full mt-1" />
-            )}
+            <Info size={22} strokeWidth={activeTab === 'info' ? 2.5 : 2} />
+            <span className="text-[10px] font-bold mt-1">Info</span>
           </button>
 
         </nav>
