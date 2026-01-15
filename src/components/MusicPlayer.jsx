@@ -66,9 +66,9 @@ export default function MusicPlayer({ className }) {
         onEnded={() => setIsPlaying(false)}
       />
 
-      {/* Main Player Button */}
       <motion.button
         onClick={togglePlay}
+        aria-label={isPlaying ? 'Pause background music' : 'Play background music'}
         className={`w-10 h-10 rounded-full flex items-center justify-center shadow-sm border transition-all ${
           isPlaying 
             ? 'bg-indigo-600 text-white border-indigo-500' 
@@ -78,7 +78,7 @@ export default function MusicPlayer({ className }) {
         whileTap={{ scale: 0.95 }}
       >
         <div className={`relative flex items-center justify-center ${isPlaying ? 'animate-[spin_4s_linear_infinite]' : ''}`}>
-           {isPlaying ? <Music size={20} /> : <Play size={20} className="ml-0.5" />}
+           {isPlaying ? <Music size={20} aria-hidden="true" /> : <Play size={20} className="ml-0.5" aria-hidden="true" />}
         </div>
       </motion.button>
 
@@ -90,9 +90,10 @@ export default function MusicPlayer({ className }) {
             animate={{ width: 40, opacity: 1, x: 0 }}
             exit={{ width: 0, opacity: 0, x: -10 }}
             onClick={toggleMute}
+            aria-label={isMuted ? 'Unmute background music' : 'Mute background music'}
             className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-slate-600 shadow-sm border border-white/20"
           >
-            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+            {isMuted ? <VolumeX size={16} aria-hidden="true" /> : <Volume2 size={16} aria-hidden="true" />}
           </motion.button>
         )}
       </AnimatePresence>

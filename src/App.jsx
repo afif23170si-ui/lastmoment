@@ -44,9 +44,11 @@ import UploadModal from './components/UploadModal';
 import AdminPanel from './components/AdminPanel';
 import MusicPlayer from './components/MusicPlayer';
 
-// Import assets
-import albumImage from './assets/album-1.jpg';
-import logoImage from './assets/logo-lm.png';
+// Import assets - WebP optimized versions
+import albumImage from './assets/album-1.webp';
+import albumImageFallback from './assets/album-1-optimized.jpg';
+import logoImage from './assets/logo-lm.webp';
+import logoImageFallback from './assets/logo-lm.png';
 
 export default function App() {
   const [user, setUser] = useState(isDemoMode ? { uid: 'demo-user' } : null);
@@ -273,7 +275,10 @@ export default function App() {
         <div className="max-w-md mx-auto flex justify-between items-center pointer-events-auto">
           {/* Logo / Brand */}
           <div onClick={() => setActiveTab('dashboard')} className="cursor-pointer bg-white/50 backdrop-blur-md border border-white/50 shadow-sm rounded-full pl-1 pr-4 py-1 flex items-center gap-3 transition-transform active:scale-95 hover:bg-white/60">
-            <img src={logoImage} alt="Logo" className="w-9 h-9 rounded-full shadow-sm object-cover" /> 
+            <picture>
+              <source srcSet={logoImage} type="image/webp" />
+              <img src={logoImageFallback} alt="Last Moment Logo" width="36" height="36" className="w-9 h-9 rounded-full shadow-sm object-cover" />
+            </picture>
             <span className="font-bold text-sm text-slate-900 tracking-tight">Last Moment.</span>
           </div>
 
@@ -289,8 +294,9 @@ export default function App() {
               <button
                 onClick={() => setShowAdminPanel(true)}
                 className="flex items-center gap-1.5 bg-blue-500 text-white px-3 py-2 rounded-full text-xs font-bold shadow-sm"
+                aria-label="Review pending payments"
               >
-                <Eye size={14} />
+                <Eye size={14} aria-hidden="true" />
                 Review
               </button>
             )}
@@ -302,11 +308,12 @@ export default function App() {
                   ? 'bg-rose-500 text-white shadow-rose-200' 
                   : 'bg-white/50 backdrop-blur-md border border-white/50 text-slate-600 hover:text-blue-600 hover:bg-white/60'
               }`}
+              aria-label={isAdmin ? 'Logout dari admin mode' : 'Login sebagai admin'}
             >
-              <Lock size={16} />
+              <Lock size={16} aria-hidden="true" />
               {/* Badge for non-admin showing pending count */}
               {!isAdmin && pendingPayments.length > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center" aria-label={`${pendingPayments.length} pending payments`}>
                   {pendingPayments.length}
                 </span>
               )}
@@ -413,11 +420,17 @@ export default function App() {
                 {/* Right Image - Full Height (65% Width) */}
                 <div className="absolute right-0 top-0 bottom-0 w-[65%]">
                    <div className="absolute inset-0 bg-gradient-to-l from-transparent via-slate-800/80 to-slate-800 z-10"></div>
-                   <img 
-                     src={albumImage} 
-                     alt="Our Moment" 
-                     className="w-full h-full object-cover grayscale-[0.2]"
-                   />
+                   <picture>
+                     <source srcSet={albumImage} type="image/webp" />
+                     <img 
+                       src={albumImageFallback}
+                       alt="Geng Last Moment - Foto bersama sebelum lulus" 
+                       width="800"
+                       height="800"
+                       loading="lazy"
+                       className="w-full h-full object-cover grayscale-[0.2]"
+                     />
+                   </picture>
                 </div>
               </motion.section>
 
@@ -815,11 +828,17 @@ export default function App() {
                 <div className="relative overflow-hidden rounded-xl">
                    {/* Shine Effect */}
                    <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/40 to-white/0 z-20 pointer-events-none w-full h-full -skew-x-12 translate-x-[-200%] animate-[shine_3s_infinite]"></div>
-                   <img 
-                      src="/qris-gopay.png" 
-                      alt="QRIS GoPay" 
-                      className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
-                   />
+                   <picture>
+                     <source srcSet="/qris-gopay.webp" type="image/webp" />
+                     <img 
+                        src="/qris-gopay-optimized.png" 
+                        alt="QRIS GoPay untuk transfer iuran tabungan" 
+                        width="600"
+                        height="600"
+                        loading="lazy"
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
+                     />
+                   </picture>
                 </div>
               </div>
 
