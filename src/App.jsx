@@ -952,15 +952,16 @@ export default function App() {
           </button>
 
           {/* 3. QR Payment (Floating Center) */}
-          <div className="relative -mt-10 mx-2">
+          <div className="relative mx-2 flex flex-col items-center justify-end h-full"> 
             <motion.button 
               whileHover={{ scale: 1.05, rotate: 90 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setActiveTab('payment')}
-              className="w-16 h-16 bg-gradient-to-tr from-blue-600 to-blue-500 rounded-full shadow-xl shadow-blue-500/30 flex items-center justify-center text-white border-[5px] border-[#f8fafc] z-20"
+              className="w-14 h-14 bg-gradient-to-tr from-blue-600 to-blue-500 rounded-full shadow-xl shadow-blue-500/30 flex items-center justify-center text-white border-[4px] border-[#f8fafc] z-20 -mt-12 mb-0.5"
             >
-              <QrCode size={26} />
+              <QrCode size={24} />
             </motion.button>
+            <span className="text-[10px] font-bold text-slate-500 translate-y-1">Bayar</span>
           </div>
 
           <button
