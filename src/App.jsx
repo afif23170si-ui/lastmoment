@@ -44,10 +44,10 @@ import UploadModal from './components/UploadModal';
 import AdminPanel from './components/AdminPanel';
 import MusicPlayer from './components/MusicPlayer';
 
-// Import assets - WebP optimized versions
-import albumImage from './assets/album-1.webp';
+// Import assets - WebP optimized versions (smaller sizes)
+import albumImage from './assets/album-1-small.webp';
 import albumImageFallback from './assets/album-1-optimized.jpg';
-import logoImage from './assets/logo-lm.webp';
+import logoImage from './assets/logo-lm-small.webp';
 import logoImageFallback from './assets/logo-lm.png';
 
 export default function App() {
@@ -277,7 +277,7 @@ export default function App() {
           <div onClick={() => setActiveTab('dashboard')} className="cursor-pointer bg-white/50 backdrop-blur-md border border-white/50 shadow-sm rounded-full pl-1 pr-4 py-1 flex items-center gap-3 transition-transform active:scale-95 hover:bg-white/60">
             <picture>
               <source srcSet={logoImage} type="image/webp" />
-              <img src={logoImageFallback} alt="Last Moment Logo" width="36" height="36" className="w-9 h-9 rounded-full shadow-sm object-cover" />
+              <img src={logoImageFallback} alt="Last Moment Logo" width="36" height="36" loading="eager" className="w-9 h-9 rounded-full shadow-sm object-cover" />
             </picture>
             <span className="font-bold text-sm text-slate-900 tracking-tight">Last Moment.</span>
           </div>
@@ -401,7 +401,8 @@ export default function App() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="bg-slate-800 rounded-2xl relative overflow-hidden flex items-center shadow-xl h-32"
+                className="bg-slate-800 rounded-2xl relative overflow-hidden flex items-center shadow-xl" 
+                style={{height: '128px', minHeight: '128px'}}
               >
                 {/* Text Content */}
                 <div className="z-20 p-5 flex flex-col justify-center h-full relative">
@@ -418,16 +419,16 @@ export default function App() {
                 </div>
 
                 {/* Right Image - Full Height (65% Width) */}
-                <div className="absolute right-0 top-0 bottom-0 w-[65%]">
+                <div className="absolute right-0 top-0 bottom-0 w-[65%]" style={{aspectRatio: '1/1'}}>
                    <div className="absolute inset-0 bg-gradient-to-l from-transparent via-slate-800/80 to-slate-800 z-10"></div>
                    <picture>
                      <source srcSet={albumImage} type="image/webp" />
                      <img 
                        src={albumImageFallback}
                        alt="Geng Last Moment - Foto bersama sebelum lulus" 
-                       width="800"
-                       height="800"
-                       loading="lazy"
+                       width="500"
+                       height="500"
+                       fetchpriority="high"
                        className="w-full h-full object-cover grayscale-[0.2]"
                      />
                    </picture>

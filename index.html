@@ -10,18 +10,44 @@
   <meta name="description"
     content="Last Moment Tracker - Aplikasi tracking tabungan bersama untuk liburan kelulusan Geng Last Moment" />
 
+  <!-- Critical CSS - Inline for faster FCP -->
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased
+    }
+
+    #root {
+      min-height: 100vh
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #f8fafc
+    }
+  </style>
+
+  <!-- Preload LCP image -->
+  <link rel="preload" as="image" href="/assets/images/album-1-small.webp" fetchpriority="high" type="image/webp">
+
   <!-- DNS Prefetch & Preconnect for better performance -->
   <link rel="dns-prefetch" href="https://fonts.googleapis.com">
   <link rel="dns-prefetch" href="https://fonts.gstatic.com">
   <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com">
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
-  <!-- Optimized font loading with display=swap for better FCP -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+
+  <!-- Optimized font loading - swap to optional for less CLS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=optional" rel="stylesheet"
+    media="print" onload="this.media='all'">
   <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=optional"
+      rel="stylesheet">
   </noscript>
 
   <title>Last Moment Tracker | Tabungan Bersama 2027</title>
