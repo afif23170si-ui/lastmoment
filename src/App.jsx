@@ -347,7 +347,7 @@ export default function App() {
                   {/* Top Row */}
                   <div className="flex justify-between items-start">
                     <div className="w-full">
-                       <p className="text-blue-100/70 text-xs font-medium tracking-wide mb-0.5">Total Tabungan</p>
+                       <p className="text-blue-50 text-xs font-medium tracking-wide mb-0.5">Total Tabungan</p>
                        <h2 className="text-3xl font-light tracking-tight mb-3">
                          Rp {totalTerkumpul.toLocaleString('id-ID')}
                        </h2>
@@ -376,19 +376,19 @@ export default function App() {
                   <div className="grid grid-cols-3 gap-2 border-t border-white/10 pt-3 mt-1">
                      {/* 1. Target */}
                      <div className="flex flex-col">
-                        <span className="text-[9px] text-blue-200 uppercase tracking-wider">Target</span>
+                        <span className="text-[9px] text-blue-100 uppercase tracking-wider">Target</span>
                         <span className="text-xs font-bold truncate">2 Juta</span>
                      </div>
                      
                      {/* 2. Iuran */}
                      <div className="flex flex-col border-l border-white/10 pl-3">
-                        <span className="text-[9px] text-blue-200 uppercase tracking-wider">Iuran</span>
+                        <span className="text-[9px] text-blue-100 uppercase tracking-wider">Iuran</span>
                         <span className="text-xs font-bold">12k/bln</span>
                      </div>
 
                      {/* 3. Sisa */}
                      <div className="flex flex-col border-l border-white/10 pl-3">
-                        <span className="text-[9px] text-blue-200 uppercase tracking-wider">Sisa Waktu</span>
+                        <span className="text-[9px] text-blue-100 uppercase tracking-wider">Sisa Waktu</span>
                         <span className="text-xs font-bold">{hitungCountdown().hari} Hari</span>
                      </div>
                   </div>
@@ -443,11 +443,11 @@ export default function App() {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-bold text-slate-800 text-lg">Monthly Updates</h3>
-                      <span className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                      <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-[10px] font-bold">
                         {listSudahBayarBulanIni.length}/{MEMBERS.length}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-400 font-medium">Periode {bulanSekarang}</p>
+                    <p className="text-xs text-slate-500 font-medium">Periode {bulanSekarang}</p>
                   </div>
                   <button 
                     onClick={() => setActiveTab('history')}
@@ -512,8 +512,8 @@ export default function App() {
                             {m.nama.charAt(0)}
                           </div>
                           <div>
-                            <p className={`text-sm font-bold ${m.status === 'paid' ? 'text-slate-800' : m.status === 'pending' ? 'text-amber-800' : 'text-slate-500'}`}>{m.nama}</p>
-                            <p className="text-[10px] font-medium text-slate-400">{m.getDateInfo()}</p>
+                            <p className={`text-sm font-bold ${m.status === 'paid' ? 'text-slate-800' : m.status === 'pending' ? 'text-amber-800' : 'text-slate-600'}`}>{m.nama}</p>
+                            <p className="text-[10px] font-medium text-slate-500">{m.getDateInfo()}</p>
                           </div>
                         </div>
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
@@ -931,22 +931,20 @@ export default function App() {
           {/* Note: In a real advanced setup we'd calculate x/width, but for simple grid we'll use individual button backgrounds or simple color transitions. 
               Let's use a cleaner approach: Icons only, active state has a glowing dot and color change. */}
 
-          {/* 1. Home */}
           <button
             onClick={() => setActiveTab('dashboard')}
             className={`flex-1 flex flex-col items-center justify-center transition-all duration-300 py-1 ${
-              activeTab === 'dashboard' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
+              activeTab === 'dashboard' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             <TrendingUp size={22} strokeWidth={activeTab === 'dashboard' ? 2.5 : 2} />
             <span className="text-[10px] font-bold mt-1">Home</span>
           </button>
 
-          {/* 2. Trip */}
           <button
             onClick={() => setActiveTab('trip')}
             className={`flex-1 flex flex-col items-center justify-center transition-all duration-300 py-1 ${
-              activeTab === 'trip' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
+              activeTab === 'trip' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             <Map size={22} strokeWidth={activeTab === 'trip' ? 2.5 : 2} />
@@ -965,22 +963,20 @@ export default function App() {
             </motion.button>
           </div>
 
-          {/* 4. History */}
           <button
             onClick={() => setActiveTab('history')}
             className={`flex-1 flex flex-col items-center justify-center transition-all duration-300 py-1 ${
-              activeTab === 'history' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
+              activeTab === 'history' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             <History size={22} strokeWidth={activeTab === 'history' ? 2.5 : 2} />
             <span className="text-[10px] font-bold mt-1">Riwayat</span>
           </button>
 
-          {/* 5. Info */}
           <button
             onClick={() => setActiveTab('info')}
             className={`flex-1 flex flex-col items-center justify-center transition-all duration-300 py-1 ${
-              activeTab === 'info' ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'
+              activeTab === 'info' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             <Info size={22} strokeWidth={activeTab === 'info' ? 2.5 : 2} />
