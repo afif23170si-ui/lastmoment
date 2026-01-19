@@ -64,7 +64,7 @@ export default function App() {
   const [pendingPayments, setPendingPayments] = useState([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
-  const [historyYear, setHistoryYear] = useState('all'); // 'all', '2025', '2026', '2027'
+  const [historyYear, setHistoryYear] = useState(new Date().getFullYear().toString()); // Default to current year e.g. '2026'
   const [historyMonth, setHistoryMonth] = useState('all'); // 'all', 'Januari', etc.
 
   // Admin PIN from environment variable
