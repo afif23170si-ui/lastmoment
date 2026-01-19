@@ -66,6 +66,12 @@ export default function App() {
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [historyYear, setHistoryYear] = useState(new Date().getFullYear().toString()); // Default to current year e.g. '2026'
   const [historyMonth, setHistoryMonth] = useState('all'); // 'all', 'Januari', etc.
+  
+  // Dashboard Monthly Updates filter
+  const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+  const [dashboardMonth, setDashboardMonth] = useState(monthNames[new Date().getMonth()]);
+  const [dashboardYear, setDashboardYear] = useState(new Date().getFullYear().toString());
+  const selectedPeriod = `${dashboardMonth} ${dashboardYear}`;
 
   // Admin PIN from environment variable
   const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '2027';
@@ -160,9 +166,12 @@ export default function App() {
   const toggleStatusBayar = async (nama) => {
     if (!isAdmin || !user) return;
     
+    // Use selectedPeriod from dashboard filters instead of current month
+    const targetMonth = selectedPeriod;
+    
     if (isDemoMode) {
       // Demo mode: toggle locally
-      const idDokumen = `${nama}-${bulanSekarang}`.replace(/\s+/g, '-').toLowerCase();
+      const idDokumen = `${nama}-${targetMonth}`.replace(/\s+/g, '-').toLowerCase();
       const existing = payments.find(p => p.id === idDokumen);
       
       if (existing) {
@@ -172,7 +181,7 @@ export default function App() {
           id: idDokumen,
           name: nama,
           amount: IURAN_PER_BULAN,
-          month: bulanSekarang,
+          month: targetMonth,
           date: new Date().toISOString(),
           timestamp: Date.now(),
           adminId: user.uid
@@ -181,17 +190,18 @@ export default function App() {
       return;
     }
 
-    const idDokumen = `${nama}-${bulanSekarang}`.replace(/\s+/g, '-').toLowerCase();
+    const idDokumen = `${nama}-${targetMonth}`.replace(/\s+/g, '-').toLowerCase();
     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'payments', idDokumen);
+    const sudahBayar = payments.some(p => p.name === nama && p.month === targetMonth);
 
     try {
-      if (listSudahBayarBulanIni.includes(nama)) {
+      if (sudahBayar) {
         await deleteDoc(docRef);
       } else {
         await setDoc(docRef, {
           name: nama,
           amount: IURAN_PER_BULAN,
-          month: bulanSekarang,
+          month: targetMonth,
           date: new Date().toISOString(),
           timestamp: Date.now(),
           adminId: user.uid
@@ -439,22 +449,50 @@ export default function App() {
 
               {/* Members List (Redesign) */}
               <section className="bg-slate-50/50 backdrop-blur-sm border border-white/60 p-6 rounded-2xl">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
+                {/* Header with Filters */}
+                <div className="flex flex-col gap-3 mb-4">
+                  {/* Title Row */}
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
                       <h3 className="font-bold text-slate-800 text-lg">Monthly Updates</h3>
                       <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                        {listSudahBayarBulanIni.length}/{MEMBERS.length}
+                        {payments.filter(p => p.month === selectedPeriod).length}/{MEMBERS.length}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500 font-medium">Periode {bulanSekarang}</p>
+                    <button 
+                      onClick={() => setActiveTab('history')}
+                      className="text-[10px] font-bold text-blue-600 border border-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-full flex items-center gap-1 transition-all active:scale-95"
+                    >
+                      Lihat Semua <ChevronRight size={12} />
+                    </button>
                   </div>
-                  <button 
-                    onClick={() => setActiveTab('history')}
-                    className="text-[10px] font-bold text-blue-600 border border-blue-600 hover:bg-blue-50 px-4 py-2 rounded-full flex items-center gap-1 transition-all active:scale-95"
-                  >
-                    Lihat Semua <ChevronRight size={12} />
-                  </button>
+                  
+                  {/* Filter Row */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="relative">
+                      <select
+                        value={dashboardMonth}
+                        onChange={(e) => setDashboardMonth(e.target.value)}
+                        className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-xs font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+                      >
+                        {monthNames.map(m => (
+                          <option key={m} value={m}>{m}</option>
+                        ))}
+                      </select>
+                      <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                    </div>
+                    <div className="relative">
+                      <select
+                        value={dashboardYear}
+                        onChange={(e) => setDashboardYear(e.target.value)}
+                        className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-xs font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+                      >
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                      </select>
+                      <ChevronDown size={12} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Grouped Member Cards */}
@@ -462,10 +500,10 @@ export default function App() {
                   // Prepare member data with status
                   const membersWithStatus = MEMBERS.map((member) => {
                     const nama = member.name;
-                    const sudahBayar = listSudahBayarBulanIni.includes(nama);
-                    const pendingData = pendingPayments.find(p => p.name === nama && p.month === bulanSekarang);
+                    const sudahBayar = payments.some(p => p.name === nama && p.month === selectedPeriod);
+                    const pendingData = pendingPayments.find(p => p.name === nama && p.month === selectedPeriod);
                     const isPending = !!pendingData;
-                    const paymentData = payments.find(p => p.name === nama && p.month === bulanSekarang);
+                    const paymentData = payments.find(p => p.name === nama && p.month === selectedPeriod);
                     const status = sudahBayar ? 'paid' : isPending ? 'pending' : 'unpaid';
                     
                     const getDateInfo = () => {
