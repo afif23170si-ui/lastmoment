@@ -169,14 +169,16 @@ export default function App() {
     // Use selectedPeriod from dashboard filters instead of current month
     const targetMonth = selectedPeriod;
     
+    // Find existing payment (could have auto-generated ID or manual ID)
+    const existingPayment = payments.find(p => p.name === nama && p.month === targetMonth);
+    const sudahBayar = !!existingPayment;
+    
     if (isDemoMode) {
       // Demo mode: toggle locally
-      const idDokumen = `${nama}-${targetMonth}`.replace(/\s+/g, '-').toLowerCase();
-      const existing = payments.find(p => p.id === idDokumen);
-      
-      if (existing) {
-        setPayments(prev => prev.filter(p => p.id !== idDokumen));
+      if (sudahBayar) {
+        setPayments(prev => prev.filter(p => !(p.name === nama && p.month === targetMonth)));
       } else {
+        const idDokumen = `${nama}-${targetMonth}`.replace(/\s+/g, '-').toLowerCase();
         setPayments(prev => [...prev, {
           id: idDokumen,
           name: nama,
@@ -190,14 +192,15 @@ export default function App() {
       return;
     }
 
-    const idDokumen = `${nama}-${targetMonth}`.replace(/\s+/g, '-').toLowerCase();
-    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'payments', idDokumen);
-    const sudahBayar = payments.some(p => p.name === nama && p.month === targetMonth);
-
     try {
-      if (sudahBayar) {
+      if (sudahBayar && existingPayment?.id) {
+        // Delete using actual document ID from Firebase
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'payments', existingPayment.id);
         await deleteDoc(docRef);
       } else {
+        // Add new payment with generated ID
+        const idDokumen = `${nama}-${targetMonth}`.replace(/\s+/g, '-').toLowerCase();
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'payments', idDokumen);
         await setDoc(docRef, {
           name: nama,
           amount: IURAN_PER_BULAN,
