@@ -200,8 +200,8 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
               <CheckCircle size={40} className="text-green-500" />
             </div>
-            <h4 className="text-lg font-black text-green-600 mb-2">Bukti Terkirim!</h4>
-            <p className="text-sm text-slate-500">Menunggu verifikasi admin</p>
+            <h4 className="text-lg font-black text-green-600 mb-2">Pembayaran Tercatat!</h4>
+            <p className="text-sm text-slate-500">Terima kasih sudah nabung 🎉</p>
           </div>
         ) : (
           // Upload Form
