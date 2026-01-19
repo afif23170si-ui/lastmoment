@@ -759,35 +759,72 @@ export default function App() {
                         );
                       }
                       
-                      return filteredPayments
-                        .sort((a, b) => b.timestamp - a.timestamp)
-                        .map((p, i) => (
-                          <motion.div 
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.05 }}
-                            key={p.id} 
-                            className="flex justify-between items-center p-4 bg-white/60 hover:bg-white rounded-xl border border-slate-100 transition-colors"
-                          >
-                            <div className="flex items-center gap-4">
-                               <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center shadow-sm">
-                                  <Coins size={18} className="text-blue-500" />
-                               </div>
-                               <div>
-                                  <p className="text-sm font-bold text-slate-700">{p.name}</p>
-                                  <p className="text-[10px] text-slate-400 font-medium">
-                                    {new Date(p.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} • {new Date(p.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-                                  </p>
-                               </div>
+                      // Group payments by month
+                      const groupedByMonth = filteredPayments.reduce((groups, payment) => {
+                        const month = payment.month;
+                        if (!groups[month]) {
+                          groups[month] = [];
+                        }
+                        groups[month].push(payment);
+                        return groups;
+                      }, {});
+
+                      // Sort months (newest first) and sort payments within each group
+                      const monthOrder = [
+                        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                      ];
+                      const sortedMonths = Object.keys(groupedByMonth).sort((a, b) => {
+                        const [monthA, yearA] = a.split(' ');
+                        const [monthB, yearB] = b.split(' ');
+                        if (yearA !== yearB) return parseInt(yearB) - parseInt(yearA);
+                        return monthOrder.indexOf(monthB) - monthOrder.indexOf(monthA);
+                      });
+
+                      return sortedMonths.map((monthKey, groupIndex) => {
+                        const monthPayments = groupedByMonth[monthKey].sort((a, b) => 
+                          new Date(b.date) - new Date(a.date)
+                        );
+                        
+                        return (
+                          <div key={monthKey} className="mb-4">
+                            {/* Month Header */}
+                            <div className="flex items-center gap-2 mb-3 sticky top-0 bg-slate-50/80 backdrop-blur-sm py-2 -mx-4 px-4 z-10">
+                              <Calendar size={14} className="text-blue-500" />
+                              <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">{monthKey}</span>
+                              <span className="text-[10px] text-slate-400 font-medium">({monthPayments.length} setoran)</span>
                             </div>
-                            <div className="text-right">
-                              <p className="text-sm font-black text-emerald-600">+12k</p>
-                              <span className="text-[9px] font-bold bg-slate-100 px-2 py-0.5 rounded-full text-slate-400 uppercase inline-block mt-1">
-                                {p.month.split(' ')[0]}
-                              </span>
+                            
+                            {/* Payment Cards */}
+                            <div className="space-y-2">
+                              {monthPayments.map((p, i) => (
+                                <motion.div 
+                                  initial={{ opacity: 0, x: -20 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: (groupIndex * 0.1) + (i * 0.03) }}
+                                  key={p.id} 
+                                  className="flex justify-between items-center p-3 bg-white/60 hover:bg-white rounded-xl border border-slate-100 transition-colors"
+                                >
+                                  <div className="flex items-center gap-3">
+                                     <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center">
+                                        <Coins size={16} className="text-emerald-500" />
+                                     </div>
+                                     <div>
+                                        <p className="text-sm font-bold text-slate-700">{p.name}</p>
+                                        <p className="text-[10px] text-slate-400 font-medium">
+                                          {new Date(p.date).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' })} • {new Date(p.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                                        </p>
+                                     </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <p className="text-sm font-black text-emerald-600">+12k</p>
+                                  </div>
+                                </motion.div>
+                              ))}
                             </div>
-                          </motion.div>
-                        ));
+                          </div>
+                        );
+                      });
                     })()}
                   </div>
                </div>
