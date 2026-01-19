@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from 'react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db, appId, isDemoMode } from '../config/firebase';
 import { MEMBERS, IURAN_PER_BULAN } from '../data/members';
 import imageCompression from 'browser-image-compression';
@@ -128,13 +128,15 @@ export default function UploadModal({ isOpen, onClose, currentMonth }) {
       
       setUploadProgress(80);
 
-      // Auto-approve: Save directly to payments collection
-      const paymentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'payments');
-      await addDoc(paymentsRef, {
+      // Auto-approve: Save directly to payments collection with structured ID
+      const idDokumen = `${selectedName}-${selectedPeriod}`.replace(/\s+/g, '-').toLowerCase();
+      const paymentDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'payments', idDokumen);
+      await setDoc(paymentDocRef, {
         name: selectedName,
         month: selectedPeriod,
         amount: IURAN_PER_BULAN,
         date: new Date().toISOString(),
+        timestamp: Date.now(),
         proofUrl: imageUrl, // Keep proof URL so admin can review/reject if needed
         status: 'paid'
       });
